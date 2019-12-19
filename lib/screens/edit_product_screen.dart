@@ -47,6 +47,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveForm() {
+    final bool isValid = _form.currentState.validate();
+
+    if (!isValid) {
+      return;
+    }
+
     _form.currentState.save();
   }
 
@@ -74,6 +80,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
                 },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please provider a value.';
+                  }
+                  return null;
+                },
                 onSaved: (value) => _editedProduct = Product(
                   title: value,
                   price: _editedProduct.price,
@@ -90,6 +102,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please provider a value.';
+                  }
+                  return null;
+                },
                 onSaved: (value) => _editedProduct = Product(
                   title: _editedProduct.title,
                   price: double.parse(value),
@@ -103,6 +121,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please provider a value.';
+                  }
+                  return null;
+                },
                 onSaved: (value) => _editedProduct = Product(
                   title: _editedProduct.title,
                   price: _editedProduct.price,
@@ -138,6 +162,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       controller: _imageUrlController,
                       focusNode: _imageUrlFocusNode,
                       onFieldSubmitted: (_) => _saveForm(),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please provider a value.';
+                        }
+                        return null;
+                      },
                       onSaved: (value) => _editedProduct = Product(
                         title: _editedProduct.title,
                         price: _editedProduct.price,

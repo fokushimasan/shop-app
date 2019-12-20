@@ -149,6 +149,5 @@ class Products with ChangeNotifier {
       notifyListeners();
       throw HttpException('Could not delete product.');
     }
-    // existingProduct = null;
   }
 }

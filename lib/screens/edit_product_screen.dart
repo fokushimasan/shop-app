@@ -79,12 +79,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (!_imageUrlFocusNode.hasFocus) {
       final String _imageUrlLocal = _imageUrlController.text;
 
-      if (_imageUrlLocal.isEmpty ||
-          (!_imageUrlLocal.startsWith('http') &&
-              !_imageUrlLocal.startsWith('https')) ||
-          (!_imageUrlLocal.endsWith('.png') &&
-              !_imageUrlLocal.endsWith('.jpg') &&
-              !_imageUrlLocal.endsWith('.jpeg'))) {
+      // if (_imageUrlLocal.isEmpty ||
+      //     (!_imageUrlLocal.startsWith('http') &&
+      //         !_imageUrlLocal.startsWith('https')) ||
+      //     (!_imageUrlLocal.endsWith('.png') &&
+      //         !_imageUrlLocal.endsWith('.jpg') &&
+      //         !_imageUrlLocal.endsWith('.jpeg'))) {
+      //   return;
+      // }
+      if (_imageUrlLocal.isEmpty) {
         return;
       }
       setState(() {});

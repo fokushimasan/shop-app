@@ -143,7 +143,7 @@ class _AuthCardState extends State<AuthCard> {
           _authData['email'],
           _authData['password'],
         );
-      }
+      }      
     } on HttpException catch (e) {
       var errorMessage = 'Authentication failed.';
 

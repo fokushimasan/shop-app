@@ -4,12 +4,14 @@ import 'package:provider/provider.dart';
 import '../providers/cart.dart';
 import '../screens/product_detail_screen.dart';
 import '../providers/product.dart';
+import '../providers/auth.dart';
 
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context, listen: false);
-    final cart = Provider.of<Cart>(context, listen: false);
+    final productData = Provider.of<Product>(context, listen: false);
+    final cartData = Provider.of<Cart>(context, listen: false);
+    final authData = Provider.of<Auth>(context, listen: false);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -18,11 +20,11 @@ class ProductItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(
               ProductDetailScreen.routeName,
-              arguments: product.id,
+              arguments: productData.id,
             );
           },
           child: Image.network(
-            product.imageUrl,
+            productData.imageUrl,
             fit: BoxFit.cover,
           ),
         ),
@@ -33,19 +35,19 @@ class ProductItem extends StatelessWidget {
               icon: Icon(
                 product.isFavorite ? Icons.favorite : Icons.favorite_border,
               ),
-              onPressed: () => product.toggleFavoriteStatus(),
+              onPressed: () => product.toggleFavoriteStatus(authData.token),
               color: Theme.of(context).accentColor,
             ),
             // child: const Text('Never changes!'),
           ),
           title: Text(
-            product.title,
+            productData.title,
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: () {
-              cart.addItem(product.id, product.price, product.title);
+              cartData.addItem(productData.id, productData.price, productData.title);
               Scaffold.of(context).hideCurrentSnackBar();
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: const Text('Added item to cart!'),
@@ -53,7 +55,7 @@ class ProductItem extends StatelessWidget {
                 action: SnackBarAction(
                   label: 'UNDO',
                   onPressed: () {
-                    cart.removeSingleItem(product.id);
+                    cartData.removeSingleItem(productData.id);
                   },
                 ),
               ));

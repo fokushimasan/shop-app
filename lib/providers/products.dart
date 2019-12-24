@@ -43,8 +43,9 @@ class Products with ChangeNotifier {
   ];
 
   final String authToken;
+  final String userId;
 
-  Products(this.authToken, this._items);
+  Products(this.authToken, this.userId, this._items);
 
   List<Product> get items {
     return [..._items];
@@ -59,17 +60,23 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    final url = 'https://shop-app-3d66f.firebaseio.com/products.json?auth=$authToken';
+    var url =
+        'https://shop-app-3d66f.firebaseio.com/products.json?auth=$authToken';
 
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      final List<Product> loadedProducts = [];
 
       if (extractedData == null) {
         return;
       }
 
+      url =
+          'https://shop-app-3d66f.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
+
+      final List<Product> loadedProducts = [];
       extractedData.forEach((productId, productData) {
         loadedProducts.add(Product(
           id: productId,
@@ -77,7 +84,9 @@ class Products with ChangeNotifier {
           description: productData['description'],
           imageUrl: productData['imageUrl'],
           price: productData['price'],
-          isFavorite: productData['isFavorite'],
+          isFavorite: (favoriteData == null)
+              ? false
+              : (favoriteData[productId] ?? false),
         ));
       });
 
@@ -89,7 +98,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    final url = 'https://shop-app-3d66f.firebaseio.com/products.json?auth=$authToken';
+    final url =
+        'https://shop-app-3d66f.firebaseio.com/products.json?auth=$authToken';
 
     try {
       final response = await http.post(
@@ -99,7 +109,6 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'isFavorite': product.isFavorite,
         }),
       );
 
@@ -123,7 +132,8 @@ class Products with ChangeNotifier {
     final productIndex = _items.indexWhere((prod) => prod.id == id);
 
     if (productIndex >= 0) {
-      final url = 'https://shop-app-3d66f.firebaseio.com/products/$id.json?auth=$authToken';
+      final url =
+          'https://shop-app-3d66f.firebaseio.com/products/$id.json?auth=$authToken';
 
       try {
         await http.patch(
@@ -144,7 +154,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = 'https://shop-app-3d66f.firebaseio.com/products/$id.json?auth=$authToken';
+    final url =
+        'https://shop-app-3d66f.firebaseio.com/products/$id.json?auth=$authToken';
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);

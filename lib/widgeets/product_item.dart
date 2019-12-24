@@ -35,7 +35,10 @@ class ProductItem extends StatelessWidget {
               icon: Icon(
                 product.isFavorite ? Icons.favorite : Icons.favorite_border,
               ),
-              onPressed: () => product.toggleFavoriteStatus(authData.token),
+              onPressed: () => product.toggleFavoriteStatus(
+                authData.token,
+                authData.userId,
+              ),
               color: Theme.of(context).accentColor,
             ),
             // child: const Text('Never changes!'),
@@ -47,7 +50,8 @@ class ProductItem extends StatelessWidget {
           trailing: IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: () {
-              cartData.addItem(productData.id, productData.price, productData.title);
+              cartData.addItem(
+                  productData.id, productData.price, productData.title);
               Scaffold.of(context).hideCurrentSnackBar();
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: const Text('Added item to cart!'),

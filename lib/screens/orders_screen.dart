@@ -30,10 +30,14 @@ class OrdersScreen extends StatelessWidget {
               );
             } else {
               return Consumer<Orders>(
-                builder: (ctx, orderData, _) => ListView.builder(
-                  itemCount: orderData.orders.length,
-                  itemBuilder: (ctx, i) => OrderItem(orderData.orders[i]),
-                ),
+                builder: (ctx, orderData, _) => orderData.orders.length <= 0
+                    ? Center(
+                        child: const Text('No orders found!'),
+                      )
+                    : ListView.builder(
+                        itemCount: orderData.orders.length,
+                        itemBuilder: (ctx, i) => OrderItem(orderData.orders[i]),
+                      ),
               );
             }
           }
